@@ -1,8 +1,11 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { FeatureCard } from "@/utils/constant";
-import platformImageLight from "@/assets/platform_img_1_light.png";
-import platformImageDark from "@/assets/platform_img_1_dark.png";
+import platformImageLight1 from "@/assets/platform_img_1_light.png";
+import platformImageDark1 from "@/assets/platform_img_1_dark.png";
+import platformImageDark2 from "@/assets/platform_img_2_dark.png";
+import platformImageLight2 from "@/assets/platform_img_2_light.png";
+
 import { useTheme } from "@/components/provider/theme-provider";
 import { useNavigate } from "react-router-dom";
 
@@ -26,27 +29,32 @@ const Landing = () => {
 
       <div className="w-full border rounded-lg shadow-2xl shadow-primary">
         <img
-          src={theme === "dark" ? platformImageDark : platformImageLight}
+          src={theme === "dark" ? platformImageDark1 : platformImageLight1}
           className="rounded-lg"
         />
       </div>
 
       <div className="mt-20 w-full">
-        <h2 className="text-4xl">Features</h2>
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 mt-10">
-          {FeatureCard.map((feature) => (
-            <Card
-              key={feature.name}
-              className={`h-72 row-span-1 rounded-xl ${feature.bg} `}
-            >
-              <CardHeader>
-                <CardTitle className="text-5xl text-neutral-900">{feature.name}</CardTitle>
-              </CardHeader>
-              <CardFooter className="text-neutral-950">
-                {feature.description}
-              </CardFooter>
-            </Card>
-          ))}
+      <h2 className="text-4xl">Features</h2>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 mt-10">
+            {FeatureCard.map((feature,i) => (
+              <Card
+                key={feature.name}
+                className={`h-72 ${ i === 2 ? "col-span-2" : "col-span-1" }  rounded-lg ${feature.bg} `}
+              >
+                <CardHeader>
+                  <CardTitle className="text-3xl text-neutral-900">{feature.name}</CardTitle>
+                </CardHeader>
+                <CardFooter className="text-neutral-950">
+                  {feature.description}
+                </CardFooter>
+              </Card>
+            ))}
+          </div>
+          <div className="mt-10 w-full h-fit col-span-2">
+            <img src={theme === "dark" ? platformImageDark2 : platformImageLight2} alt="platformimg2" className="rounded-lg"/>
+          </div>
         </div>
       </div>
     </div>

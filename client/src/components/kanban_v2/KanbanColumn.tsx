@@ -16,7 +16,7 @@ const KanbanColumn = ({ column, tasks }: { column: Column; tasks: Task[] }) => {
   return (
     <div
       ref={setNodeRef}
-      className={`flex flex-col h-full rounded-lg p-2 bg-accent border border-card-foreground/10`}
+      className={`flex flex-col h-full rounded-lg p-2 bg-accent border border-card-foreground/10 min-h-[800px] scroll-auto`}
     >
       <div className="flex items-center justify-between mb-4">
         <h3 className="text-xs">{column.columnName}</h3>

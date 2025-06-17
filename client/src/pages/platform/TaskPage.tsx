@@ -64,7 +64,7 @@ const TaskPage = () => {
   }, [projectId, navigate]);
 
   return (
-    <div className="px-10 py-10">
+    <div className="px-10 pb-20">
       <div className="flex gap-5 items-center">
         {project && <h2 className="text-md">{project?.projectName}</h2>}
         {error && <span className="text-lg text-red-500">{error}</span>}
@@ -92,7 +92,7 @@ const TaskPage = () => {
         <div className="w-full col-span-2">
           <Kanban tasks={tasks} />
         </div>
-        <div className="w-full col-span-1 min-h-[650px] bg-accent rounded-md p-5 flex flex-col gap-5">
+        <div className="w-full col-span-1 h-fit bg-accent rounded-md p-5 flex flex-col gap-5">
           <Card>
             <CardHeader>
               <CardTitle className="text-primary">
