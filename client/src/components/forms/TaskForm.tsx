@@ -33,44 +33,55 @@ import { TaskSchema, type TaskSchemaType } from "@/types/schema";
 import { toast } from "sonner";
 import { taskService } from "@/services/taskService";
 import { usePlatform } from "@/context/PlatformContext";
+import { useParams } from "react-router-dom";
 
 interface TaskFormProps {
-  projectId: string;
   task?: Task;
   trigger: React.ReactNode;
 }
 
-const TaskForm = ({ projectId, task, trigger }: TaskFormProps) => {
-
-  const { handleSubmit, register, reset, formState : { errors, isLoading }, control } = useForm<TaskSchemaType>({
-    resolver : zodResolver(TaskSchema),
-    defaultValues : task ? (
-      {
-        taskName : task.taskName,
-        description : task.description,
-        dueDate : task.dueDate,
-        priority : task.priority,
-        status : task.status
-      }
-    ) : undefined
+const TaskForm = ({ task, trigger }: TaskFormProps) => {
+  const { projectId } = useParams();
+  const {
+    handleSubmit,
+    register,
+    reset,
+    formState: { errors, isLoading },
+    control,
+  } = useForm<TaskSchemaType>({
+    resolver: zodResolver(TaskSchema),
+    defaultValues: task
+      ? {
+          taskName: task.taskName,
+          description: task.description,
+          dueDate: task.dueDate,
+          priority: task.priority,
+          status: task.status,
+        }
+      : undefined,
   });
-  const { dispatch  } = usePlatform();
+  const { dispatch } = usePlatform();
 
   const [open, setOpen] = useState(false);
 
-  const handleTaskFormSubmit = async(data : TaskSchemaType) => {
+  const handleTaskFormSubmit = async (data: TaskSchemaType) => {
     try {
-      const newTask = await taskService.createTask(projectId,data);
-      dispatch({ type : "ADD_TASK", payload : newTask.data });
+      if (task) {
+        const updatedTask = await taskService.updateTask(task.id, data);
+        dispatch({ type: "UPDATE_TASK", payload: updatedTask.data });
+      } else {
+        const newTask = await taskService.createTask(projectId!, data);
+        dispatch({ type: "ADD_TASK", payload: newTask.data });
+      }
     } catch (error) {
-      if(error instanceof Error) {
+      if (error instanceof Error) {
         toast.error(error.message);
       }
     } finally {
       setOpen(false);
       reset();
     }
-  }
+  };
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
@@ -88,18 +99,26 @@ const TaskForm = ({ projectId, task, trigger }: TaskFormProps) => {
               <Label htmlFor="taskName">Task Name</Label>
               <Input id="taskName" {...register("taskName")} />
               {errors.taskName && (
-                <p className="text-xs text-red-500">{errors.taskName.message}</p>
+                <p className="text-xs text-red-500">
+                  {errors.taskName.message}
+                </p>
               )}
             </div>
             <div className="grid gap-3">
               <Label htmlFor="description">Description</Label>
-              <Textarea id="description" className="resize-none" {...register("description")}/>
+              <Textarea
+                id="description"
+                className="resize-none"
+                {...register("description")}
+              />
               {errors.description && (
-                <p className="text-xs text-red-500">{errors.description.message}</p>
+                <p className="text-xs text-red-500">
+                  {errors.description.message}
+                </p>
               )}
             </div>
             <div className="grid grid-cols-2 gap-4">
-              <Controller 
+              <Controller
                 name="status"
                 control={control}
                 render={({ field }) => (
@@ -118,13 +137,15 @@ const TaskForm = ({ projectId, task, trigger }: TaskFormProps) => {
                       </SelectContent>
                     </Select>
                     {errors.status && (
-                      <p className="text-xs text-red-500">{errors.status.message}</p>
+                      <p className="text-xs text-red-500">
+                        {errors.status.message}
+                      </p>
                     )}
                   </div>
                 )}
               />
 
-              <Controller 
+              <Controller
                 control={control}
                 name="priority"
                 render={({ field }) => (
@@ -143,13 +164,15 @@ const TaskForm = ({ projectId, task, trigger }: TaskFormProps) => {
                       </SelectContent>
                     </Select>
                     {errors.priority && (
-                      <p className="text-xs text-red-500">{errors.priority.message}</p>
+                      <p className="text-xs text-red-500">
+                        {errors.priority.message}
+                      </p>
                     )}
                   </div>
                 )}
               />
             </div>
-            <Controller 
+            <Controller
               control={control}
               name="dueDate"
               render={({ field }) => (
@@ -162,15 +185,26 @@ const TaskForm = ({ projectId, task, trigger }: TaskFormProps) => {
                         className="data-[empty=true]:text-muted-foreground w-full justify-start text-left font-normal"
                       >
                         <CalendarIcon />
-                        {field.value ? format(field.value, "PPP") : <span>Pick a date</span>}
+                        {field.value ? (
+                          format(field.value, "PPP")
+                        ) : (
+                          <span>Pick a date</span>
+                        )}
                       </Button>
                     </PopoverTrigger>
                     <PopoverContent className="w-auto p-0">
-                      <Calendar mode="single" selected={field.value} onSelect={field.onChange} disabled={(date) => date < new Date()}/>
+                      <Calendar
+                        mode="single"
+                        selected={field.value}
+                        onSelect={field.onChange}
+                        disabled={(date) => date < new Date()}
+                      />
                     </PopoverContent>
                   </Popover>
                   {errors.dueDate && (
-                    <p className="text-xs text-red-500">{errors.dueDate.message}</p>
+                    <p className="text-xs text-red-500">
+                      {errors.dueDate.message}
+                    </p>
                   )}
                 </div>
               )}
@@ -180,7 +214,13 @@ const TaskForm = ({ projectId, task, trigger }: TaskFormProps) => {
             <DialogClose asChild>
               <Button variant="outline">Cancel</Button>
             </DialogClose>
-            <Button type="submit">{ isLoading ? <Loader className="h-5 w-5 animate-spin"/> : "Create" }</Button>
+            <Button type="submit">
+              {isLoading ? (
+                <Loader className="h-5 w-5 animate-spin" />
+              ) : (
+                "Create"
+              )}
+            </Button>
           </DialogFooter>
         </form>
       </DialogContent>

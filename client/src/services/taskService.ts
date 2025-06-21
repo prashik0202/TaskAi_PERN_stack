@@ -55,11 +55,26 @@ export const taskService = {
     taskStatus: Task["status"]
   ): Promise<AxiosResponse<Task>> => {
     try {
-      const response = await axiosInstance.patch(
-        `/api/tasks/${taskId}`,
-        {
-          status : taskStatus
-        }
+      const response = await axiosInstance.patch(`/api/tasks/${taskId}`, {
+        status: taskStatus,
+      });
+      return response;
+    } catch (error) {
+      if (error instanceof AxiosError) {
+        throw new Error(error.message || `Error: ${error.message}`);
+      }
+      throw new Error("An unexpected error occured!");
+    }
+  },
+
+  createTask: async (
+    projecctId: string,
+    taskDetails: TaskSchemaType
+  ): Promise<AxiosResponse<Task>> => {
+    try {
+      const response = await axiosInstance.post(
+        `/api/tasks/${projecctId}`,
+        taskDetails
       );
       return response;
     } catch (error) {
@@ -70,9 +85,9 @@ export const taskService = {
     }
   },
 
-  createTask : async(projecctId : string, taskDetails : TaskSchemaType) : Promise<AxiosResponse<Task>> => {
+  deleteTask: async (taskId: string): Promise<AxiosResponse<void>> => {
     try {
-      const response = await axiosInstance.post(`/api/tasks/${projecctId}`, taskDetails);
+      const response = await axiosInstance.delete(`/api/tasks/${taskId}`);
       return response;
     } catch (error) {
       if (error instanceof AxiosError) {
@@ -80,5 +95,5 @@ export const taskService = {
       }
       throw new Error("An unexpected error occured!");
     }
-  }
+  },
 };

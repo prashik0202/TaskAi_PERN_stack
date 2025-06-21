@@ -35,16 +35,18 @@ const Landing = () => {
       </div>
 
       <div className="mt-20 w-full">
-      <h2 className="text-4xl">Features</h2>
+        <h2 className="text-4xl">Features</h2>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 mt-10">
-            {FeatureCard.map((feature,i) => (
+            {FeatureCard.map((feature, i) => (
               <Card
                 key={feature.name}
-                className={`h-72 ${ i === 2 ? "col-span-2" : "col-span-1" }  rounded-lg ${feature.bg} `}
+                className={`h-72 ${i === 2 ? "col-span-2" : "col-span-1"}  rounded-lg ${feature.bg} `}
               >
                 <CardHeader>
-                  <CardTitle className="text-3xl text-neutral-900">{feature.name}</CardTitle>
+                  <CardTitle className="text-3xl text-neutral-900">
+                    {feature.name}
+                  </CardTitle>
                 </CardHeader>
                 <CardFooter className="text-neutral-950">
                   {feature.description}
@@ -53,7 +55,11 @@ const Landing = () => {
             ))}
           </div>
           <div className="mt-10 w-full h-fit col-span-2">
-            <img src={theme === "dark" ? platformImageDark2 : platformImageLight2} alt="platformimg2" className="rounded-lg"/>
+            <img
+              src={theme === "dark" ? platformImageDark2 : platformImageLight2}
+              alt="platformimg2"
+              className="rounded-lg"
+            />
           </div>
         </div>
       </div>

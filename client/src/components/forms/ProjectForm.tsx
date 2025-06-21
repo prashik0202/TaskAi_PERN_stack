@@ -44,8 +44,8 @@ export function ProjectForm({ trigger, project }: ProjectForm) {
     resolver: zodResolver(ProjectSchema),
     defaultValues: project
       ? {
-          projectName: "",
-          description: "",
+          projectName: project.projectName,
+          description: project.description,
         }
       : undefined,
   });
@@ -53,17 +53,27 @@ export function ProjectForm({ trigger, project }: ProjectForm) {
   const [open, setOpen] = useState<boolean>(false);
 
   const handleFormSubmit = async (data: ProjectSchemaType) => {
+    dispatch({ type: "SET_LOADING", payload: true });
     try {
-      dispatch({ type: "SET_LOADING", payload: true });
-      if (user) {
+      if (project) {
+        // update the project:
+        const updatedProject = await projectApiService.updateProject({
+          userId: user!.id,
+          updatedAt: new Date(),
+          description: data.description,
+          projectName: data.projectName,
+          id: project.id,
+        });
+        dispatch({ type: "UPDATE_PROJECT", payload: updatedProject.data });
+      } else {
+        // create new project:
         const newProject = await projectApiService.createProject({
           description: data.description,
           projectName: data.projectName,
           isArchived: false,
           isPublic: true,
-          userId: user.id,
+          userId: user!.id,
         });
-
         dispatch({ type: "ADD_PROJECT", payload: newProject.data });
       }
     } catch (error) {
@@ -71,7 +81,11 @@ export function ProjectForm({ trigger, project }: ProjectForm) {
       toast.error("Unable to create Project!");
     } finally {
       dispatch({ type: "SET_LOADING", payload: false });
-      toast.success("Project created successfully!");
+      toast.success(
+        project
+          ? "Project updated successfully"
+          : "Project created successfully!"
+      );
       reset();
       setOpen(false);
     }
@@ -85,10 +99,13 @@ export function ProjectForm({ trigger, project }: ProjectForm) {
       <DialogContent className="sm:max-w-[425px]">
         <form onSubmit={handleSubmit(handleFormSubmit)}>
           <DialogHeader>
-            <DialogTitle>Edit profile</DialogTitle>
+            <DialogTitle>
+              {project ? "Edit Project" : "Create Project"}
+            </DialogTitle>
             <DialogDescription>
-              Make changes to your profile here. Click save when you&apos;re
-              done.
+              {project
+                ? "You can create Project"
+                : "Update Your project details"}
             </DialogDescription>
           </DialogHeader>
           <div className="grid gap-4 mt-5">

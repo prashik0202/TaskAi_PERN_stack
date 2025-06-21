@@ -20,16 +20,16 @@ export const getStatusColor = (status: string) => {
   }
 };
 
-export const getPriorityColor = (priority : string) => {
-  switch(priority) {
-    case "low": 
-      return "bg-green-400"
-    case "medium": 
-      return "bg-orange-400"
-    case "high": 
-      return "bg-red-400"
-  } 
-}
+export const getPriorityColor = (priority: string) => {
+  switch (priority) {
+    case "low":
+      return "bg-green-400";
+    case "medium":
+      return "bg-orange-400";
+    case "high":
+      return "bg-red-400";
+  }
+};
 
 export const getStatusColorCard = (status: string) => {
   switch (status) {

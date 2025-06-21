@@ -13,9 +13,12 @@ type ACTION =
   | { type: "SET_LOADING"; payload: boolean }
   | { type: "SET_ERROR"; payload: string }
   | { type: "ADD_PROJECT"; payload: Project }
+  | { type: "UPDATE_PROJECT"; payload: Project }
+  | { type: "DELETE_PROJECT"; payload: string }
   | { type: "SET_TASKS"; payload: Task[] }
   | { type: "ADD_TASK"; payload: Task }
-  | { type: "UPDATE_TASK"; payload : Task }
+  | { type: "UPDATE_TASK"; payload: Task }
+  | { type: "DELETE_TASK"; payload: string };
 
 const initialState: PlatformContextIntf = {
   project: [],
@@ -57,6 +60,18 @@ const reducer = (
         ...state,
         project: [...state.project, action.payload],
       };
+    case "UPDATE_PROJECT":
+      return {
+        ...state,
+        project: state.project.map((proj) =>
+          proj.id === action.payload.id ? action.payload : proj
+        ),
+      };
+    case "DELETE_PROJECT":
+      return {
+        ...state,
+        project: state.project.filter((proj) => proj.id !== action.payload),
+      };
     case "ADD_TASK":
       return {
         ...state,
@@ -70,10 +85,15 @@ const reducer = (
     case "UPDATE_TASK":
       return {
         ...state,
-        tasks : state.tasks.map((task) => (
+        tasks: state.tasks.map((task) =>
           task.id === action.payload.id ? action.payload : task
-        ))
-      }
+        ),
+      };
+    case "DELETE_TASK":
+      return {
+        ...state,
+        tasks: state.tasks.filter((task) => task.id !== action.payload),
+      };
   }
 };
 

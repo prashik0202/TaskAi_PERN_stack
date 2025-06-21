@@ -1,5 +1,4 @@
-
-import { Bar, BarChart, CartesianGrid, XAxis } from "recharts"
+import { Bar, BarChart, CartesianGrid, XAxis } from "recharts";
 import {
   type ChartConfig,
   ChartContainer,
@@ -7,11 +6,11 @@ import {
   ChartLegendContent,
   ChartTooltip,
   ChartTooltipContent,
-} from "@/components/ui/chart"
-import type { Task } from "@/types/types"
+} from "@/components/ui/chart";
+import type { Task } from "@/types/types";
 
 interface TaskAnalysisProps {
-  tasks : Task[]
+  tasks: Task[];
 }
 
 const chartConfig = {
@@ -29,8 +28,7 @@ const chartConfig = {
   },
 } satisfies ChartConfig;
 
-export function TaskAnalysis( { tasks } : TaskAnalysisProps ) {
-
+export default function TaskStackGraph({ tasks }: TaskAnalysisProps) {
   const statuses = ["TODO", "IN_PROGRESS", "IN_REVIEW", "DONE"];
   const priorities = ["low", "medium", "high"];
 
@@ -39,15 +37,17 @@ export function TaskAnalysis( { tasks } : TaskAnalysisProps ) {
 
     return {
       status,
-      ...priorities.reduce((acc, priority) => {
-        acc[priority] = dataForStatus.filter(
-          (task) => task.priority?.toLowerCase() === priority
-        ).length;
-        return acc;
-      }, {} as Record<string, number>),
+      ...priorities.reduce(
+        (acc, priority) => {
+          acc[priority] = dataForStatus.filter(
+            (task) => task.priority?.toLowerCase() === priority
+          ).length;
+          return acc;
+        },
+        {} as Record<string, number>
+      ),
     };
   });
-
 
   return (
     <ChartContainer config={chartConfig}>
@@ -67,5 +67,5 @@ export function TaskAnalysis( { tasks } : TaskAnalysisProps ) {
         <Bar dataKey="high" stackId="a" fill="var(--chart-high)" />
       </BarChart>
     </ChartContainer>
-  )
+  );
 }

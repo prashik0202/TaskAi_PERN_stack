@@ -23,11 +23,11 @@ export const ProjectSchema = z.object({
   projectName: z
     .string()
     .min(1, { message: "Please enter project name" })
-    .max(20, { message: "Project name is too long!" }),
+    .max(40, { message: "Project name is too long!" }),
   description: z
     .string()
     .min(1, { message: "Please enter description" })
-    .max(60, { message: "max 60 character allowed" }),
+    .max(200, { message: "max 60 character allowed" }),
 });
 
 export type ProjectSchemaType = z.infer<typeof ProjectSchema>;
@@ -43,7 +43,7 @@ export const TaskSchema = z.object({
     .max(100, { message: "Please provide short descipton of your task" }),
   status: z.enum(["TODO", "IN_PROGRESS", "IN_REVIEW", "DONE"]),
   priority: z.enum(["low", "medium", "high"]),
-  dueDate: z.coerce.date({ required_error : "DueDate is required!"})
+  dueDate: z.coerce.date({ required_error: "DueDate is required!" }),
 });
 
 export type TaskSchemaType = z.infer<typeof TaskSchema>;

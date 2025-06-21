@@ -41,4 +41,29 @@ export const projectApiService = {
       throw error;
     }
   },
+
+  updateProject: async (
+    updatedProjectData: Partial<Project>
+  ): Promise<AxiosResponse<Project>> => {
+    try {
+      const response = await axiosInstance.put(
+        `/api/project/${updatedProjectData.id}`,
+        updatedProjectData
+      );
+      return response;
+    } catch (error) {
+      console.log("Error while updating project Details", error);
+      throw error;
+    }
+  },
+
+  deleteProject: async (projectId: string): Promise<AxiosResponse<void>> => {
+    try {
+      const response = await axiosInstance.delete(`/api/project/${projectId}`);
+      return response;
+    } catch (error) {
+      console.log("Error while deleting project", error);
+      throw error;
+    }
+  },
 };

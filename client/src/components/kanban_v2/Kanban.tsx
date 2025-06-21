@@ -43,7 +43,7 @@ const Kanban = ({ tasks }: { tasks: Task[] }) => {
     setActiveTask(task || null);
   };
 
-  const handleDragEnd = async(event: DragEndEvent) => {
+  const handleDragEnd = async (event: DragEndEvent) => {
     const { active, over } = event;
     setActiveTask(null);
 
@@ -59,15 +59,19 @@ const Kanban = ({ tasks }: { tasks: Task[] }) => {
       dispatch({
         type: "SET_TASKS",
         payload: tasks.map((task) =>
-          task.id === active.id ? { ...task, status: overColumn.status } : task),
+          task.id === active.id ? { ...task, status: overColumn.status } : task
+        ),
       });
       // after this we hit update status api
-      const updatedTask = await taskService.updateTaskStatus(activeTask.id ,overColumn.status); 
+      const updatedTask = await taskService.updateTaskStatus(
+        activeTask.id,
+        overColumn.status
+      );
       // and again we update the status at client side
       dispatch({
-        type : "UPDATE_TASK",
-        payload : updatedTask.data
-      })
+        type: "UPDATE_TASK",
+        payload: updatedTask.data,
+      });
       return;
     }
 
