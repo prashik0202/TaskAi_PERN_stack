@@ -1,7 +1,7 @@
 import { and, eq } from "drizzle-orm";
 import db from "../../database";
 import { projects } from "../../database/schema";
-import { ProjectCreate, ProjectSelect } from "../../types/types";
+import { ProjectCreate, ProjectSelect, ProjectUpdate } from "../../types/types";
 
 export class ProjectService {
   async creteProject(
@@ -56,7 +56,7 @@ export class ProjectService {
   }
 
   async updateProject(
-    projectData: Partial<ProjectSelect>,
+    projectData: Partial<ProjectUpdate>,
     projectId: string
   ): Promise<ProjectSelect | undefined> {
     try {
@@ -79,7 +79,7 @@ export class ProjectService {
 
   async deleteProject(projectId: string): Promise<void> {
     try {
-      await db.delete(projects).where(eq(projects.id, projectId));
+      await db.delete(projects).where(eq(projects.id, projectId)).returning();
     } catch (error) {
       if (error instanceof Error) {
         throw new Error(error.message);
